@@ -1,17 +1,17 @@
-from prefect import flow, task
-
-# import geojson
-import redis
-from redis.typing import FieldT, EncodableT
 import os
 
-REDIS_STREAM_NAME = os.environ.get("REDIS_STREAM_NAME", "dedl:new_features")
+from prefect import flow, task
+import redis
+from redis.typing import FieldT, EncodableT
+
+REDIS_CLIENT_HOST = os.environ.get("REDIS_CLIENT_HOST", "localhost")
+REDIS_CLIENT_PORT = int(os.environ.get("REDIS_CLIENT_PORT", "6379"))
 REDIS_CLIENT_PASSWORD = os.environ.get("REDIS_CLIENT_PASSWORD", None)
+REDIS_STREAM_NAME = os.environ.get("REDIS_STREAM_NAME", "dedl:new_features")
 
 
 @task(log_prints=True)
 def add_event(redis: redis.Redis, stream: str, payload: dict[FieldT, EncodableT]):
-    print(f"Redis XADD - stream_name:'{stream} with payload {payload}")
     redis.xadd(stream, payload)
 
 
@@ -25,8 +25,8 @@ def send_events(
 
 if __name__ == "__main__":
     r = redis.Redis(
-        host="localhost",
-        port=6379,
+        host=REDIS_CLIENT_HOST,
+        port=REDIS_CLIENT_PORT,
         password=REDIS_CLIENT_PASSWORD,
         decode_responses=True,
     )
