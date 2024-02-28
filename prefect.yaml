@@ -22,7 +22,10 @@ pull:
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
 - name: tutorial_deployment
-  flow_name: repo_info
   entrypoint: flows/flow_tutorial.py:repo_info
   work_pool:
     name: dedl-work-pool
+    job_variables:
+      namespace: dedl
+      env: 
+        PREFECT_KUBERNETES_CLUSTER_UID: "1"
