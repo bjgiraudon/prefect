@@ -31,3 +31,9 @@ deployments:
     name: dedl-work-pool
     job_variables:
       namespace: dedl
+- name: redis_streams
+  entrypoint: flows/redis_streams.py:send_events
+  work_pool:
+    name: dedl-work-pool
+    job_variables:
+      namespace: dedl
