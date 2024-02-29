@@ -1,15 +1,13 @@
 name: Deploy Prefect flow
-
 on:
   push:
     branches:
       - main
 
 jobs:
-  deploy:
+  deploy_flow:
     name: Deploy
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,21 +17,27 @@ jobs:
         with:
           python-version: '3.12'
         
-      - name: Prefect Deploy - Tutorial
-        env:
-          # PREFECT_API_KEY: ${{ secrets.PREFECT_API_KEY }}
-          PREFECT_API_URL: ${{ secrets.PREFECT_API_URL }}
-        run: |
-          pip install -r requirements.txt
-          python flows/flow_tutorial.py
+      # - name: Prefect Deploy - Tutorial
+      #   env:
+      #     # PREFECT_API_KEY: ${{ secrets.PREFECT_API_KEY }}
+      #     PREFECT_API_URL: ${{ secrets.PREFECT_API_URL }}
+      #   run: |
+      #     pip install -r requirements.txt
+      #     python flows/flow_tutorial.py
 
-      - name: Prefect Deploy - Redis Streams
-        env:
-          PREFECT_API_URL: ${{ secrets.PREFECT_API_URL }}
-          REDIS_CLIENT_HOST: ${{ secrets.REDIS_CLIENT_HOST }}
-          REDIS_CLIENT_PORT: ${{ secrets.REDIS_CLIENT_PORT }}
-          REDIS_CLIENT_PASSWORD: ${{ secrets.REDIS_CLIENT_PASSWORD }}
-          REDIS_STREAM_NAME: ${{ secrets.REDIS_STREAM_NAME }}
-        run: |
-          pip install -r requirements.txt
-          python flows/redis_streams.py
+      # - name: Prefect Deploy - Redis Streams
+      #   env:
+      #     PREFECT_API_URL: ${{ secrets.PREFECT_API_URL }}
+      #     REDIS_CLIENT_HOST: ${{ secrets.REDIS_CLIENT_HOST }}
+      #     REDIS_CLIENT_PORT: ${{ secrets.REDIS_CLIENT_PORT }}
+      #     REDIS_CLIENT_PASSWORD: ${{ secrets.REDIS_CLIENT_PASSWORD }}
+      #     REDIS_STREAM_NAME: ${{ secrets.REDIS_STREAM_NAME }}
+      #   run: |
+      #     pip install -r requirements.txt
+      #     python flows/redis_streams.py
+      - name: Run Prefect Deploy
+        uses: PrefectHQ/actions-prefect-deploy@v3
+        with:
+          deployment-names: Simple
+          requirements-file-paths: ./requirements.txt
+          deployment-file-path: ./prefect.yaml

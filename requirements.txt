@@ -1,5 +1,4 @@
 prefect
-prefect-docker
 prefect-kubernetes
 redis[hiredis]
 geojson
